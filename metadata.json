@@ -1,0 +1,5 @@
+{
+  "name": "DHsystem Knowledge Hub",
+  "description": "Hệ thống quản lý kho kiến thức RAG đa chủ đề, hỗ trợ kết nối Xiaozhi AI qua giao thức MCP.",
+  "requestFramePermissions": []
+}
