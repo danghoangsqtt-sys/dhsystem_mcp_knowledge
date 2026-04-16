@@ -1,8 +1,6 @@
 import React from 'react';
-import { Database, ShieldCheck } from 'lucide-react';
+import { Database, ShieldCheck, Cpu, Rss } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import BotMascot from './BotMascot';
-
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -35,6 +33,24 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               Dashboard
             </Link>
             <Link 
+              to="/knowledge"
+              className={`text-sm font-medium transition-all duration-200 px-3 py-1.5 rounded-md flex items-center gap-1 ${
+                location.pathname === '/knowledge' ? 'bg-secondary text-white' : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+              }`}
+            >
+              <Database className="w-4 h-4" />
+              Tài Liệu
+            </Link>
+            <Link 
+              to="/flasher"
+              className={`text-sm font-medium transition-all duration-200 px-3 py-1.5 rounded-md flex items-center gap-1 ${
+                location.pathname === '/flasher' ? 'bg-primary text-white shadow-[0_0_15px_rgba(59,130,246,0.3)]' : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+              }`}
+            >
+              <Cpu className="w-4 h-4" /> 
+              Flasher
+            </Link>
+            <Link 
               to="/settings"
               className={`text-sm font-medium transition-all duration-200 px-3 py-1.5 rounded-md ${
                 location.pathname === '/settings' ? 'bg-secondary text-white' : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
@@ -58,8 +74,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
 
-      {/* AI Bot Mascot (Always present) */}
-      <BotMascot />
 
       {/* Footer */}
       <footer className="border-t border-border py-8 bg-card mt-auto">
@@ -68,7 +82,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             Developed & Copyright &copy; 2025 by <span className="font-semibold text-foreground">DHsystem</span>
           </p>
           <p className="text-xs text-slate-600 mt-2">
-            Powered by Next.js, Supabase, and Google Gemini 2.0
+            Powered by React, FastAPI, và Google Gemini 2.0 Live API
           </p>
         </div>
       </footer>

@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "dhsystem-knowledge": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["knowledge_server.py"],
+      "env": {}
+    },
+    "remote-sse-server": {
+      "type": "sse",
+      "url": "https://api.example.com/sse",
+      "disabled": true
+    },
+    "remote-http-server": {
+      "type": "http",
+      "url": "https://api.example.com/mcp",
+      "disabled": true
+    }
+  }
+}

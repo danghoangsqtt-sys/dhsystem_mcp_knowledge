@@ -1,0 +1,67 @@
+version: '3.8'
+
+# DHsystem Knowledge Hub — Docker Compose (Production)
+# Chạy trên VPS Hetzner CAX11 (ARM64)
+#
+# Lệnh quản lý:
+#   Start:   docker compose up -d
+#   Stop:    docker compose down
+#   Logs:    docker compose logs -f
+#   Update:  bash deploy/update.sh
+#   Status:  docker compose ps
+
+services:
+  # ───────── Service 1: MCP + WebSocket Server ─────────────
+  dhsystem-server:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: dhsystem-server
+    restart: always
+    ports:
+      - "8000:8000"   # MCP SSE + HTTP API
+      - "8765:8765"   # WebSocket bridge cho ESP32
+    env_file:
+      - ./backend/.env
+    volumes:
+      # ChromaDB data: persist vào host (không mất khi rebuild)
+      - chroma_data:/app/chroma_data
+      # Temp uploads: tự động dọn dẹp
+      - ./backend/temp_uploads:/app/temp_uploads
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ───────── Service 2: MCP Pipe → Xiaozhi.me WSS ──────────
+  dhsystem-pipe:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: dhsystem-pipe
+    restart: always
+    env_file:
+      - ./backend/.env
+    # Override CMD để chạy mcp_pipe.py thay vì server.py
+    command: python mcp_pipe.py
+    depends_on:
+      dhsystem-server:
+        condition: service_healthy
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# ───────── Volumes ─────────────────────────────────────────
+volumes:
+  # ChromaDB data được persist giữa các lần restart/rebuild
+  chroma_data:
+    driver: local
